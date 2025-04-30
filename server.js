@@ -1,26 +1,14 @@
-const express = require("express");
-const app = express();
-const port = 3000;
-const morgan = require("morgan");
-const mongoose = require("mongoose");
-const StudentRouter = require("./routes/StudentRouter");
-const UserRouter = require("./routes/UserRouter");
+const app = require('./app'); // Import the app from app.js
+const dotenv = require('dotenv'); // Import dotenv to load environment variables
+dotenv.config(); // Load environment variables from .env file
+const port = process.env.PORT; // Set the port to either the environment variable PORT or 3000
+const mongoose = require("mongoose");   
+
 
 // DataBase Connection 
-mongoose.connect('mongodb://localhost:27017/my-student')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connection to MongoDB!'))
     .catch(() => console.log('MongoDB Connection Failed!'))
-
-// Middleware
-app.use(express.json());
-app.use(morgan("dev"));
-
-app.use('/api/students', StudentRouter);
-app.use('/api/user', UserRouter);
-
-app.get('/', (req, res) => {
-    res.send(JSON.stringify({Student: [{id: 1, name: "tara mera", class: 10}, {id: 2, name: "baka tera", class: 19}]}))
-  })
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}....`); 

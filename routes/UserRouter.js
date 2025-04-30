@@ -15,10 +15,11 @@ const newUser = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
+    const token = user.generateAuthToken();
 
     try {
         await user.save();
-        res.status(200).send({message: "User Created Successfully!", user: user});
+        res.status(200).send({message: "User Created Successfully!", user: user, token: token});
     } catch (error) {
         res.status(500).send("Internal Server Error!");
     }

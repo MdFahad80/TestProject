@@ -1,6 +1,8 @@
 const express = require("express");
 const { Student } = require("../models/Student");
 const router = express.Router();
+const authorize = require("../middlewares/authorize");
+const admin = require("../middlewares/admin");
 
 const studentList = async (req, res) => {
     const studentList = await Student.find().sort({name: 1});
@@ -59,12 +61,12 @@ const studentDelete = async (req, res) => {
 }
 
 router.route('/')
-    .get(studentList)
+    .get([authorize, admin], studentList)
     .post(newStudent)
 
 router.route('/:id')
     .get(studentDetails)
     .put(studentUpdate)
-    .delete(studentDelete)
+    .delete([authorize, admin], studentDelete)
 
 module.exports = router;
