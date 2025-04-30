@@ -33,13 +33,29 @@ const studentDetails = async (req, res) => {
     }
 }
 
-const studentUpdate = (req, res) => {
+const studentUpdate = async (req, res) => {
     const id = req.params.id;
-    const student = req.body;
+    const updateData = req.body;
+
+    try {
+        const student = await Student.findByIdAndUpdate(id, updateData, {new: true})
+        if(!student) res.status(404).send("ID not found!");
+        res.send(student);
+    } catch (error) {
+        res.status(404).send("ID not found!");
+    }
 }
 
-const studentDelete = (req, res) => {
+const studentDelete = async (req, res) => {
+    const id = req.params.id;
 
+    try {
+        const student = await Student.findByIdAndDelete(id)
+        if(!student) res.status(404).send("ID not found!");
+        res.send(student);
+    } catch (error) {
+        res.status(404).send("ID not found!");
+    }
 }
 
 router.route('/')
